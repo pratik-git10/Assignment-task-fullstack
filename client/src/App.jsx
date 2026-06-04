@@ -9,7 +9,6 @@ import GuestRoute from "./routes/guestRoutes";
 import Users from "./pages/admin/users";
 import UserDetails from "./pages/admin/UserDetails";
 import CreateUser from "./pages/admin/CreateUser";
-import GetStores from "./pages/admin/GetStores";
 import CreateStore from "./pages/admin/CreateStore";
 import GetStores from "./pages/admin/GetStores";
 import ChangePassword from "./pages/profile/changePassword";
