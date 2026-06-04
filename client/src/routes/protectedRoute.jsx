@@ -5,12 +5,11 @@ const ProtectedRoute = ({ children, role }) => {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <p className="flex justify-center items-center my-30">Loading...</p>;
   }
 
   if (!user) {
     return <Navigate to="/" />;
-    a;
   }
 
   if (role && user.role !== role) {
