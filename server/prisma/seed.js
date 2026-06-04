@@ -1,7 +1,6 @@
 import "dotenv/config";
 import bcrypt from "bcrypt";
 import { PrismaPg } from "@prisma/adapter-pg";
-// Pointing to your custom output folder
 import { PrismaClient } from "../lib/generated/prisma/index.js";
 
 if (!process.env.DATABASE_URL) {
@@ -11,11 +10,9 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
-// 1. Pass the connection string directly via the configuration object (Prisma 7 Style)
 const connectionString = `${process.env.DATABASE_URL}`;
 const adapter = new PrismaPg({ connectionString });
 
-// 2. Instantiate Prisma using the driver adapter
 const prisma = new PrismaClient({ adapter });
 
 async function main() {

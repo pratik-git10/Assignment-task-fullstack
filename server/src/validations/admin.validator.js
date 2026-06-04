@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// 👤 User Creation Schema
 export const createUserSchema = z.object({
   name: z
     .string()
@@ -30,7 +29,6 @@ export const createUserSchema = z.object({
   }),
 });
 
-// 🏬 Store Creation Schema
 export const createStoreSchema = z.object({
   name: z
     .string()
