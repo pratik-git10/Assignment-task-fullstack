@@ -6,7 +6,7 @@ import StoresList from "./pages/user/StoresList";
 import OwnerDashboard from "./pages/owner/OwnerDashboard";
 import ProtectedRoute from "./routes/protectedRoute";
 import GuestRoute from "./routes/guestRoutes";
-import Users from "./pages/admin/users";
+import Users from "./pages/admin/Users";
 import UserDetails from "./pages/admin/UserDetails";
 import CreateUser from "./pages/admin/CreateUser";
 import CreateStore from "./pages/admin/CreateStore";
