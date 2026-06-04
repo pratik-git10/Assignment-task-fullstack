@@ -1,31 +1,6 @@
 import { z } from "zod";
 
-export const loginSchema = z.object({
-  email: z.string().email("Invalid email"),
-
-  password: z.string().min(1, "Password required"),
-});
-
-export const registerSchema = z.object({
-  name: z
-    .string()
-    .min(20, "Name must be greater than 20")
-    .max(60, "Name must be less than 60"),
-
-  email: z.string().email("Please provide email address"),
-
-  address: z.string().min(3).max(400),
-
-  password: z
-    .string()
-    .min(8)
-    .max(16)
-    .regex(
-      /^(?=.*[A-Z])(?=.*[!@#$%^&*])/,
-      "Password must contain uppercase and special character",
-    ),
-});
-
+// 👤 User Creation Schema
 export const createUserSchema = z.object({
   name: z
     .string()
@@ -55,11 +30,12 @@ export const createUserSchema = z.object({
   }),
 });
 
+// 🏬 Store Creation Schema
 export const createStoreSchema = z.object({
   name: z
     .string()
     .min(20, "Name must be at least 20 characters long.")
-    .max(60, "Store Name cannot exceeds 60 Characters"),
+    .max(60, "Name cannot exceed 60 characters."),
   email: z
     .string()
     .min(1, "Store email is required.")
@@ -69,17 +45,4 @@ export const createStoreSchema = z.object({
     .min(1, "Store address is required.")
     .max(400, "Store address cannot exceed 400 characters."),
   ownerId: z.string().uuid("Please select a valid store owner UUID."),
-});
-
-export const changePasswordSchema = z.object({
-  currentPassword: z.string().min(1),
-
-  newPassword: z
-    .string()
-    .min(8)
-    .max(16)
-    .regex(
-      /^(?=.*[A-Z])(?=.*[!@#$%^&*])/,
-      "Must contain uppercase and special character",
-    ),
 });

@@ -1,6 +1,10 @@
 import bcrypt from "bcrypt";
 import { getDashboardStats } from "../services/admin.service.js";
 import prisma from "../../configs/prisma.js";
+import {
+  createStoreSchema,
+  createUserSchema,
+} from "../../../client/src/utils/authValidationSchema.js";
 
 const getStats = async (req, res) => {
   try {
@@ -19,7 +23,15 @@ const getStats = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const { name, email, address, password, role } = req.body;
+    const validation = createUserSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(400).json({
+        success: false,
+        errors: validation.error.flatten().fieldErrors,
+      });
+    }
+
+    const { name, email, address, password, role } = validation.data;
 
     const exists = await prisma.user.findUnique({ where: { email } });
     if (exists) {
@@ -162,7 +174,15 @@ const getUserDetails = async (req, res) => {
 
 const createStore = async (req, res) => {
   try {
-    const { name, email, address, ownerId } = req.body;
+    const validation = createStoreSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(400).json({
+        success: false,
+        errors: validation.error.flatten().fieldErrors,
+      });
+    }
+
+    const { name, email, address, ownerId } = validation.data;
 
     const owner = await prisma.user.findUnique({ where: { id: ownerId } });
 
