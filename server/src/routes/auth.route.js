@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getCurrentUser,
   login,
   logout,
   register,
@@ -13,5 +14,6 @@ authRouter.post("/register", register);
 authRouter.post("/login", login);
 authRouter.post("/reset-password", auth, resetPassword);
 authRouter.post("/logout", logout);
+authRouter.get("/me", auth, getCurrentUser);
 
 export default authRouter;
