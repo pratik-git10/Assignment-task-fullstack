@@ -1,6 +1,6 @@
 import { logoutUser } from "../../api/authApi";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 
 const Navbar = () => {
@@ -28,6 +28,11 @@ const Navbar = () => {
           className="ml-4 border px-4 py-1 rounded-lg cursor-pointer active:scale-95 ">
           Logout
         </button>
+        <Link
+          to={"/profile/change-password"}
+          className="ml-4 border px-4 py-1 rounded-lg cursor-pointer active:scale-95 ">
+          Change Password
+        </Link>
       </div>
     </nav>
   );
