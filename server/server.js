@@ -24,11 +24,13 @@ app.use(
 );
 app.use(cookieParser());
 
-app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    message: "Store Rating API Running",
-  });
+app.get("/api/health", async (req, res) => {
+  try {
+    await prisma.$connect();
+    res.json({ status: "UP", database: "CONNECTED" });
+  } catch (error) {
+    res.status(500).json({ status: "DOWN", error: error.message });
+  }
 });
 
 app.use("/api/auth", authRouter);
@@ -40,21 +42,5 @@ app.use("/api/stores", storeRouter);
 app.use("/api/ratings", ratingRouter);
 
 app.use("/api/owner", ownerRouter);
-
-async function startServer() {
-  try {
-    await prisma.$connect();
-
-    console.log("Database Connected");
-
-    app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
-    });
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-startServer();
 
 export default app;
