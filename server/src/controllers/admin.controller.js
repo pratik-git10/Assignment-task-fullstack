@@ -4,7 +4,11 @@ import prisma from "../../configs/prisma.js";
 import {
   createStoreSchema,
   createUserSchema,
-} from "../../../client/src/utils/authValidationSchema.js";
+} from "../validations/admin.validator.js";
+// import {
+//   createStoreSchema,
+//   createUserSchema,
+// } from "../../../client/src/utils/authValidationSchema.js";
 
 const getStats = async (req, res) => {
   try {
