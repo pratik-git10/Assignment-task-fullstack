@@ -2,10 +2,25 @@ import Navbar from "./Navbar";
 
 const DashboardLayout = ({ children }) => {
   return (
-    <div>
+    <div
+      style={{
+        minHeight: "100svh",
+        background: "var(--bg-base)",
+        display: "flex",
+        flexDirection: "column",
+      }}>
       <Navbar />
-
-      <main className="p-6">{children}</main>
+      <main
+        style={{
+          flex: 1,
+          padding: "28px 24px",
+          maxWidth: "1200px",
+          width: "100%",
+          margin: "0 auto",
+          boxSizing: "border-box",
+        }}>
+        {children}
+      </main>
     </div>
   );
 };

@@ -50,13 +50,13 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-md bg-white p-6 rounded shadow">
+        className="w-full max-w-md border rounded-lg p-6 shadow">
         <h2 className="text-2xl font-bold mb-4">Login</h2>
 
         <input
           {...register("email")}
           placeholder="Email"
-          className="w-full border p-2 mb-2"
+          className="w-full border p-2 mb-2 mt-5"
         />
 
         <p className="text-red-500 text-sm">{errors.email?.message}</p>
@@ -74,7 +74,7 @@ const Login = () => {
           Login
         </button>
 
-        <Link to="/register" className="block mt-3">
+        <Link to="/register" className="block mt-3 text-center">
           Register
         </Link>
       </form>

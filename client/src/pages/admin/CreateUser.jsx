@@ -1,15 +1,38 @@
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod"; // 💡 Import resolver
+import { zodResolver } from "@hookform/resolvers/zod";
 import { createUserSchema } from "../../utils/authValidationSchema";
 import { createUser } from "../../api/adminApi";
 import toast from "react-hot-toast";
+import DashboardLayout from "../../components/layout/DashboardLayout";
+import { UserPlus } from "lucide-react";
+
+const FormField = ({ label, error, children }) => (
+  <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+    {label && (
+      <label
+        style={{
+          fontSize: "13px",
+          fontWeight: 500,
+          color: "var(--text-secondary)",
+        }}>
+        {label}
+      </label>
+    )}
+    {children}
+    {error && (
+      <p style={{ fontSize: "12px", color: "var(--danger)", marginTop: "2px" }}>
+        {error}
+      </p>
+    )}
+  </div>
+);
 
 const CreateUser = () => {
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(createUserSchema),
   });
@@ -27,74 +50,114 @@ const CreateUser = () => {
   };
 
   return (
-    <div className="p-6 max-w-md mx-auto my-20 rounded shadow-md border">
-      <h2 className="text-xl font-bold mb-4">Create New User Profile</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <input
-            {...register("name")}
-            placeholder="Full Name (Min 20 chars)"
-            className="w-full border p-2 rounded"
-          />
-          <p className="text-red-500 text-xs mt-1">{errors.name?.message}</p>
+    <DashboardLayout>
+      <div style={{ maxWidth: "480px", margin: "0 auto" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            marginBottom: "28px",
+          }}>
+          <div
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "10px",
+              background: "var(--accent-bg)",
+              border: "1px solid var(--accent-border)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}>
+            <UserPlus size={18} color="var(--accent)" />
+          </div>
+          <div>
+            <h1
+              style={{
+                fontSize: "20px",
+                fontWeight: 700,
+                color: "var(--text-primary)",
+                letterSpacing: "-0.3px",
+              }}>
+              Create User
+            </h1>
+            <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
+              Register a new user account
+            </p>
+          </div>
         </div>
 
-        <div>
-          <input
-            type="email"
-            {...register("email")}
-            placeholder="Email Address"
-            className="w-full border p-2 rounded"
-          />
-          <p className="text-red-500 text-xs mt-1">{errors.email?.message}</p>
-        </div>
+        <div
+          style={{
+            background: "var(--bg-surface)",
+            border: "1px solid var(--border)",
+            borderRadius: "var(--radius)",
+            padding: "28px",
+            boxShadow: "var(--shadow-sm)",
+          }}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+            <FormField label="Full Name" error={errors.name?.message}>
+              <input {...register("name")} placeholder="Min 20 characters" />
+            </FormField>
 
-        <div>
-          <input
-            type="password"
-            {...register("password")}
-            placeholder="Password (8-16 chars, 1 Uppercase, 1 Special)"
-            className="w-full border p-2 rounded"
-          />
-          <p className="text-red-500 text-xs mt-1">
-            {errors.password?.message}
-          </p>
-        </div>
+            <FormField label="Email Address" error={errors.email?.message}>
+              <input
+                type="email"
+                {...register("email")}
+                placeholder="user@example.com"
+              />
+            </FormField>
 
-        <div>
-          <textarea
-            {...register("address")}
-            placeholder="Physical Address (Max 400 chars)"
-            className="w-full border p-2 rounded h-24"
-          />
-          <p className="text-red-500 text-xs mt-1">{errors.address?.message}</p>
-        </div>
+            <FormField label="Password" error={errors.password?.message}>
+              <input
+                type="password"
+                {...register("password")}
+                placeholder="8–16 chars, 1 uppercase, 1 special"
+              />
+            </FormField>
 
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            System Authorization Role
-          </label>
-          <select {...register("role")} className="w-full border p-2 rounded">
-            <option className="bg-black" value="USER">
-              Standard Customer (USER)
-            </option>
-            <option className="bg-black" value="STORE_OWNER">
-              Store Owner (STORE_OWNER)
-            </option>
-            <option className="bg-black" value="ADMIN">
-              System Admin (ADMIN)
-            </option>
-          </select>
-          <p className="text-red-500 text-xs mt-1">{errors.role?.message}</p>
-        </div>
+            <FormField label="Address" error={errors.address?.message}>
+              <textarea
+                {...register("address")}
+                placeholder="Full address (max 400 chars)"
+                style={{ minHeight: "90px", resize: "vertical" }}
+              />
+            </FormField>
 
-        <button
-          type="submit"
-          className="w-full bg-black text-white p-2 rounded font-medium hover:bg-gray-800 transition">
-          Register User
-        </button>
-      </form>
-    </div>
+            <FormField label="Role" error={errors.role?.message}>
+              <select {...register("role")}>
+                <option value="USER">Standard Customer (USER)</option>
+                <option value="STORE_OWNER">Store Owner (STORE_OWNER)</option>
+                <option value="ADMIN">System Admin (ADMIN)</option>
+              </select>
+            </FormField>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              style={{
+                width: "100%",
+                padding: "11px",
+                background: isSubmitting
+                  ? "var(--bg-elevated)"
+                  : "var(--accent)",
+                border: "none",
+                color: isSubmitting ? "var(--text-muted)" : "#fff",
+                borderRadius: "var(--radius-sm)",
+                fontSize: "14px",
+                fontWeight: 600,
+                transition: "all 0.15s",
+                marginTop: "4px",
+              }}>
+              {isSubmitting ? "Creating…" : "Create User"}
+            </button>
+          </form>
+        </div>
+      </div>
+    </DashboardLayout>
   );
 };
 

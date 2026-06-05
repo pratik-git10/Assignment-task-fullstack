@@ -50,13 +50,13 @@ const Register = () => {
     <div className="min-h-screen flex items-center justify-center">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-md bg-white p-6 rounded shadow">
-        <h2 className="text-2xl font-bold mb-4">Login</h2>
+        className="w-full max-w-md border p-6 rounded-lg shadow">
+        <h2 className="text-2xl font-bold">Login</h2>
 
         <input
           {...register("name")}
           placeholder="Name"
-          className="w-full border p-2 mb-2"
+          className="w-full border p-2 mb-2 mt-5"
         />
 
         <p className="text-red-500 text-sm">{errors.name?.message}</p>
@@ -89,7 +89,7 @@ const Register = () => {
           Register
         </button>
 
-        <Link to="/" className="block mt-3">
+        <Link to="/" className="block mt-3 text-center">
           Login
         </Link>
       </form>

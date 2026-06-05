@@ -4,15 +4,38 @@ import { createStore, getUsers } from "../../api/adminApi";
 import toast from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createStoreSchema } from "../../utils/authValidationSchema";
+import DashboardLayout from "../../components/layout/DashboardLayout";
+import { Store } from "lucide-react";
+
+const FormField = ({ label, error, children }) => (
+  <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+    {label && (
+      <label
+        style={{
+          fontSize: "13px",
+          fontWeight: 500,
+          color: "var(--text-secondary)",
+        }}>
+        {label}
+      </label>
+    )}
+    {children}
+    {error && (
+      <p style={{ fontSize: "12px", color: "var(--danger)", marginTop: "2px" }}>
+        {error}
+      </p>
+    )}
+  </div>
+);
 
 const CreateStore = () => {
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
-    resolver: zodResolver(createStoreSchema), // 🛡️ Enforce store layout limits
+    resolver: zodResolver(createStoreSchema),
   });
   const [owners, setOwners] = useState([]);
   const [loadingOwners, setLoadingOwners] = useState(true);
@@ -21,9 +44,7 @@ const CreateStore = () => {
     const fetchOwners = async () => {
       try {
         const response = await getUsers({ role: "STORE_OWNER", limit: 100 });
-        if (response.success) {
-          setOwners(response.users);
-        }
+        if (response.success) setOwners(response.users);
       } catch (error) {
         console.error("Failed to load store owners", error);
       } finally {
@@ -37,7 +58,7 @@ const CreateStore = () => {
     try {
       const response = await createStore(data);
       if (response.success) {
-        toast.success("Store successfully established and mapped!");
+        toast.success("Store created successfully!");
         reset();
       }
     } catch (error) {
@@ -46,64 +67,112 @@ const CreateStore = () => {
   };
 
   return (
-    <div className="p-6 max-w-md mx-auto my-20 rounded shadow-md border">
-      <h2 className="text-xl font-bold mb-4">Register New Retail Store</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <input
-            {...register("name", { required: "Store name is required" })}
-            placeholder="Store Business Name"
-            className="w-full border p-2 rounded"
-          />
-          <p className="text-red-500 text-xs mt-1">{errors.name?.message}</p>
+    <DashboardLayout>
+      <div style={{ maxWidth: "480px", margin: "0 auto" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            marginBottom: "28px",
+          }}>
+          <div
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "10px",
+              background: "var(--accent-bg)",
+              border: "1px solid var(--accent-border)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}>
+            <Store size={18} color="var(--accent)" />
+          </div>
+          <div>
+            <h1
+              style={{
+                fontSize: "20px",
+                fontWeight: 700,
+                color: "var(--text-primary)",
+                letterSpacing: "-0.3px",
+              }}>
+              Create Store
+            </h1>
+            <p style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
+              Register a new retail store
+            </p>
+          </div>
         </div>
 
-        <div>
-          <input
-            type="email"
-            {...register("email", { required: "Store email is required" })}
-            placeholder="Contact Email Address"
-            className="w-full border p-2 rounded"
-          />
-          <p className="text-red-500 text-xs mt-1">{errors.email?.message}</p>
-        </div>
+        <div
+          style={{
+            background: "var(--bg-surface)",
+            border: "1px solid var(--border)",
+            borderRadius: "var(--radius)",
+            padding: "28px",
+            boxShadow: "var(--shadow-sm)",
+          }}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+            <FormField label="Store Name" error={errors.name?.message}>
+              <input {...register("name")} placeholder="Business name" />
+            </FormField>
 
-        <div>
-          <input
-            {...register("address", { required: "Store location is required" })}
-            placeholder="Complete Store Address"
-            className="w-full border p-2 rounded"
-          />
-          <p className="text-red-500 text-xs mt-1">{errors.address?.message}</p>
-        </div>
+            <FormField label="Contact Email" error={errors.email?.message}>
+              <input
+                type="email"
+                {...register("email")}
+                placeholder="store@example.com"
+              />
+            </FormField>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Assign Store Owner
-          </label>
-          <select
-            {...register("ownerId", { required: "Please select an owner" })}
-            className="w-full border p-2 rounded  "
-            disabled={loadingOwners}>
-            <option className="bg-black" value="">
-              -- Select an Owner --
-            </option>
-            {owners.map((owner) => (
-              <option className="bg-black" key={owner.id} value={owner.id}>
-                {owner.name} ({owner.email})
-              </option>
-            ))}
-          </select>
-          <p className="text-red-500 text-xs mt-1">{errors.ownerId?.message}</p>
-        </div>
+            <FormField label="Store Address" error={errors.address?.message}>
+              <input
+                {...register("address")}
+                placeholder="Complete store address"
+              />
+            </FormField>
 
-        <button
-          type="submit"
-          className="w-full bg-black text-white p-2 rounded font-medium hover:bg-gray-800 transition">
-          Provision Business Entity
-        </button>
-      </form>
-    </div>
+            <FormField
+              label="Assign Store Owner"
+              error={errors.ownerId?.message}>
+              <select {...register("ownerId")} disabled={loadingOwners}>
+                <option value="">
+                  {loadingOwners ? "Loading owners…" : "— Select an Owner —"}
+                </option>
+                {owners.map((owner) => (
+                  <option key={owner.id} value={owner.id}>
+                    {owner.name} ({owner.email})
+                  </option>
+                ))}
+              </select>
+            </FormField>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              style={{
+                width: "100%",
+                padding: "11px",
+                background: isSubmitting
+                  ? "var(--bg-elevated)"
+                  : "var(--accent)",
+                border: "none",
+                color: isSubmitting ? "var(--text-muted)" : "#fff",
+                borderRadius: "var(--radius-sm)",
+                fontSize: "14px",
+                fontWeight: 600,
+                transition: "all 0.15s",
+                marginTop: "4px",
+              }}>
+              {isSubmitting ? "Creating…" : "Create Store"}
+            </button>
+          </form>
+        </div>
+      </div>
+    </DashboardLayout>
   );
 };
 

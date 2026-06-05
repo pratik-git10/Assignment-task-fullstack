@@ -1,4 +1,3 @@
-// src/pages/admin/Users.jsx
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getUserDetails } from "../../api/adminApi";
@@ -25,14 +24,14 @@ const UserDetails = () => {
       } catch (error) {
         console.error("Failed to load user information:", error);
         toast.error(error.response?.data?.message || "User profile not found.");
-        navigate("/admin/dashboard"); // Safe fallback redirect if the ID is corrupt/invalid
+        navigate("/admin/dashboard");
       } finally {
         setLoading(false);
       }
     };
 
     fetchUserProfile();
-  }, [id, navigate]); // Triggers reload if the URL ID switches
+  }, [id, navigate]);
 
   if (loading) return <p className="p-6 text-center">Loading User Data...</p>;
   if (!userData) return null;
@@ -58,10 +57,9 @@ const UserDetails = () => {
             <strong>Email Address:</strong> {userData.email}
           </p>
           <p>
-            <strong>Physical Address:</strong> {userData.address}
+            <strong>Address:</strong> {userData.address}
           </p>
 
-          {/* Render extra fields if this specific user happens to own stores */}
           {userData.role === "STORE_OWNER" && (
             <p>
               <strong>Overall Store Rating:</strong>{" "}
